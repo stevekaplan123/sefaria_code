@@ -10,7 +10,7 @@ from urllib2 import URLError, HTTPError
 
 
 def post_index(index):
-	url = 'http://dev.sefaria.org/api/v2/raw/index/New_Zohar'
+	url = 'http://localhost:8000/api/v2/raw/index/New_Zohar'
 	indexJSON = json.dumps(index)
 	values = {
 		'json': indexJSON, 
@@ -28,7 +28,7 @@ def post_index(index):
 
 
 title = "New Zohar"
-genesis_parshiot = ["Bereshit", "Noach", "Lech Lecha", "Vayera", "Chayei Sarah", "Toldot", "Vayetzei", "Vayishlach", "Vayeshev", "Miketz", "Vayigash", "Vayechi"]
+genesis_parshiot = ["Bereshit", "Noach", "Lech Lecha", "Vayera", "Chayei Sara", "Toldot", "Vayetzei", "Vayishlach", "Vayeshev", "Miketz", "Vayigash", "Vayechi"]
 exodus_parshiot = ["Shemot", "Vaera", "Bo", "Beshalach", "Yitro", "Mishpatim", "Terumah", "Tetzaveh", "Ki Tisa", "Vayakhel", "Pekudei"]
 leviticus_parshiot = ["Vayikra", "Tzav", "Shmini", "Tazria", "Metzora", "Achrei Mot", "Kedoshim", "Emor", "Behar", "Bechukotai"]
 numbers_parshiot = ["Bamidbar", "Nasso", "Beha'alotcha", "Sh'lach", "Korach", "Chukat", "Balak", "Pinchas", "Matot"]
@@ -36,7 +36,7 @@ deut_parshiot = ["Devarim", "Vaetchanan", "Eikev", "Shoftim", "Ki Teitzei", "Vay
 english_parshiot = genesis_parshiot+exodus_parshiot+leviticus_parshiot+numbers_parshiot+deut_parshiot
 
 structs = {}
-structs = { "nodes": [] }
+structs = { "nodes" : [] }
 
 intro_file = open("Introduction", 'r')
 intro_start = Ref("New Zohar "+intro_file.readline())
@@ -52,6 +52,8 @@ structs["nodes"].append({
 				"lang": "he",
 				"text": "הקדמת ספר הזוהר"
 				}],
+	"nodeType": "ArrayMapNode",
+	"refs": [],
 	"depth": 0,
 	"addressTypes": [],
 	"sectionNames": [],
@@ -73,6 +75,8 @@ structs["nodes"].append({
 				"lang": "he",
 				"text": "המן"
 				}],
+	"nodeType": "ArrayMapNode",
+	"refs": [],
 	"depth": 0,
 	"addressTypes": [],
 	"sectionNames": [],
@@ -94,6 +98,8 @@ structs["nodes"].append({
 				"lang": "he",
 				"text": "האדרא זוטא קדישא"
 				}],
+	"nodeType": "ArrayMapNode",
+	"refs": [],
 	"depth": 0,
 	"addressTypes": [],
 	"sectionNames": [],
@@ -110,6 +116,7 @@ for parsha in english_parshiot:
 	structs["nodes"].append({
 		"sharedTitle": parsha,
 		"nodeType": "ArrayMapNode",
+		"refs": [],
 		"depth": 0,
 		"addressTypes": [],
 		"sectionNames": [],
@@ -117,13 +124,15 @@ for parsha in english_parshiot:
 	})
 	f.close()
 
+'''
+structsJSON = json.dumps(structs)
 zohar_i = get_index("New Zohar")
-print zohar_i.schema
-zohar_i.set_alt_structure("Parasha", structs)
-zohar_i.categories = "Kabbalah"
+zohar_i.set_alt_structure("Parasha", structsJSON)
+zohar_JSON = json.dumps(zohar_i.schema)
+post_index(zohar_JSON)
+'''
 
-#post_index(structs)
-
+zohar_i = get_index("New Zohar")
 obj = deserialize_tree(structs, index=zohar_i, struct_class=TitledTreeNode)
 obj.title_group = zohar_i.nodes.title_group
 obj.validate()
