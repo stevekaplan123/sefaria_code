@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 
-#TO DO
-# Create hash of Hebrew parshiot to English parshiot
-
-
 import pdb
 import urllib
 import urllib2
@@ -15,8 +11,8 @@ from sefaria.model.schema import AddressTalmud
 def post_text(ref, text):
     textJSON = json.dumps(text)
     ref = ref.replace(" ", "_")
-    url = 'http://localhost:8000/api/texts/New_Zohar'
-    values = {'json': textJSON, 'apikey': 'YourApiKey'}#'F4J2j3RF6fHWHLtmAtOTeZHE3MOIcsgvcgtYSwMzHtM'}
+    url = 'http://dev.sefaria.org/api/texts/New_Zohar'
+    values = {'json': textJSON, 'apikey': 'F4J2j3RF6fHWHLtmAtOTeZHE3MOIcsgvcgtYSwMzHtM'}
     data = urllib.urlencode(values)
     req = urllib2.Request(url, data)
     try:
@@ -27,11 +23,11 @@ def post_text(ref, text):
         print e.read()
 
 
-genesis_parshiot = ["Introduction", "Bereishit", "Noach", "Lech_lecha", "Vayera", "Chayei_Sarah", "Toldot", "Vayetzei", "Vayishlach", "Vayeshev", "Miketz", "Vayigash", "Vayechi"]
-exodus_parshiot = ["Exodus", "Vaera", "Bo", "Beshalach", "Haman", "Yitro", "Mishpatim", "Terumah", "Tetzaveh", "Ki_Tisa", "Vayakhel", "Pekudei"]
-leviticus_parshiot = ["Vayikra", "Tzav", "Shemini", "Tazria", "Metzora", "Acharei_Mot", "Kedoshim", "Emor", "Behar", "Bechukotai"]
-numbers_parshiot = ["Bamidbar", "Naso", "Behalotcha", "Shelach", "Korach", "Chukat", "Balak", "Pinchas", "Matot"]
-deut_parshiot = ["Devarim", "Vaetchanan", "Eikev", "Shoftim", "Ki_Teitzei", "Vayelech", "Haazinu", "Haadre_Zuta_Kadisha"]
+genesis_parshiot = ["Introduction", "Bereshit", "Noach", "Lech Lecha", "Vayera", "Chayei Sarah", "Toldot", "Vayetzei", "Vayishlach", "Vayeshev", "Miketz", "Vayigash", "Vayechi"]
+exodus_parshiot = ["Shemot", "Vaera", "Bo", "Beshalach", "Haman", "Yitro", "Mishpatim", "Terumah", "Tetzaveh", "Ki Tisa", "Vayakhel", "Pekudei"]
+leviticus_parshiot = ["Vayikra", "Tzav", "Shmini", "Tazria", "Metzora", "Achrei Mot", "Kedoshim", "Emor", "Behar", "Bechukotai"]
+numbers_parshiot = ["Bamidbar", "Nasso", "Beha'alotcha", "Sh'lach", "Korach", "Chukat", "Balak", "Pinchas", "Matot"]
+deut_parshiot = ["Devarim", "Vaetchanan", "Eikev", "Shoftim", "Ki Teitzei", "Vayeilech", "Ha'Azinu", "Ha_Idra"]
 english_parshiot = genesis_parshiot+exodus_parshiot+leviticus_parshiot+numbers_parshiot+deut_parshiot
 
 curr_parsha = 0
@@ -43,24 +39,21 @@ zohar_struct = range(3)
 for vol_num in range(3):
 	para_count = 1	
 	if vol_num == 0:
-		daf_count = 1
+		daf_count = 0
 		vol_file = 'intro'
 		zohar_struct[vol_num] = []
 		zohar_struct[vol_num].append([])
-		zohar_struct[vol_num].append([])
 	elif vol_num == 1:
-		daf_count = 3
-		vol_file = 'shemot'
+		daf_count = 2
+		vol_file = 'shemot_parsed'
 		zohar_struct[vol_num] = []
-		zohar_struct[vol_num].append([])
 		zohar_struct[vol_num].append([])
 		zohar_struct[vol_num].append([])
 		zohar_struct[vol_num].append([])
 	elif vol_num == 2:
-		daf_count = 3
+		daf_count = 2
 		vol_file = 'lnd'
 		zohar_struct[vol_num] = []
-		zohar_struct[vol_num].append([])
 		zohar_struct[vol_num].append([])
 		zohar_struct[vol_num].append([])
 		zohar_struct[vol_num].append([])
@@ -76,10 +69,10 @@ for vol_num in range(3):
 		if first_line == True:
 			first_line = False
 			if curr_parsha_file != "":
-				curr_parsha_file.write('\n'+str(prev_vol+1)+":"+AddressTalmud.toStr("en", prev_daf)+":"+str(prev_para))
+				curr_parsha_file.write('\n'+str(prev_vol+1)+":"+AddressTalmud.toStr("en", prev_daf+1)+":"+str(prev_para))
 				curr_parsha_file.close()					
 			curr_parsha_file = open(english_parshiot[curr_parsha], 'a')
-			curr_parsha_file.write(str(vol_num+1)+":"+AddressTalmud.toStr("en", daf_count)+":1")  
+			curr_parsha_file.write(str(vol_num+1)+":"+AddressTalmud.toStr("en", daf_count+1)+":1")  
 			curr_parsha += 1
 		elif blank_line==False and stray_tag==False:
 			new_daf = line.find('דף')
@@ -89,10 +82,10 @@ for vol_num in range(3):
 				zohar_struct[vol_num].append([])
 				para_count = 1		
 			elif new_parsha >= 0 and len(line.split(' ')) < 6:
-				curr_parsha_file.write('\n'+str(vol_num+1)+":"+AddressTalmud.toStr("en", daf_count)+":"+str(para_count-1))
+				curr_parsha_file.write('\n'+str(vol_num+1)+":"+AddressTalmud.toStr("en", daf_count+1)+":"+str(para_count-1))
 				curr_parsha_file.close()
 				curr_parsha_file = open(english_parshiot[curr_parsha], 'a')
-				curr_parsha_file.write(str(vol_num+1)+":"+AddressTalmud.toStr("en", daf_count)+":"+str(para_count))
+				curr_parsha_file.write(str(vol_num+1)+":"+AddressTalmud.toStr("en", daf_count+1)+":"+str(para_count))
 				curr_parsha += 1					
 			else:
 				zohar_struct[vol_num][daf_count].append(line)
@@ -101,7 +94,7 @@ for vol_num in range(3):
 	prev_vol = vol_num
 	prev_daf = daf_count
 	if vol_file=='lnd':
-		curr_parsha_file.write('\n'+str(vol_num+1)+":"+AddressTalmud.toStr("en", daf_count)+":"+str(para_count))
+		curr_parsha_file.write('\n'+str(vol_num+1)+":"+AddressTalmud.toStr("en", daf_count+1)+":"+str(para_count))
 		curr_parsha_file.close()
 
 text = {
