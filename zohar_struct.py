@@ -6,13 +6,13 @@ import urllib2
 from urllib2 import URLError, HTTPError
 import json
 from sefaria.model.schema import AddressTalmud	
-
+import os
 
 def post_text(ref, text):
     textJSON = json.dumps(text)
     ref = ref.replace(" ", "_")
-    url = 'http://localhost:8000/api/texts/New_Zohar'
-    values = {'json': textJSON, 'apikey': 'YourApiKey'}#F4J2j3RF6fHWHLtmAtOTeZHE3MOIcsgvcgtYSwMzHtM'}
+    url = 'http://dev.sefaria.org/api/texts/New_Zohar'
+    values = {'json': textJSON, 'apikey': 'F4J2j3RF6fHWHLtmAtOTeZHE3MOIcsgvcgtYSwMzHtM'}
     data = urllib.urlencode(values)
     req = urllib2.Request(url, data)
     try:
@@ -72,7 +72,9 @@ for vol_num in range(3):
 			first_line = False
 			if curr_parsha_file != "":
 				curr_parsha_file.write('\n'+str(prev_vol+1)+":"+AddressTalmud.toStr("en", prev_daf+1)+":"+str(prev_para))
-				curr_parsha_file.close()					
+				curr_parsha_file.close()	
+			if os.path.exists(english_parshiot[curr_parsha]) == True:
+				os.remove(english_parshiot[curr_parsha])		
 			curr_parsha_file = open(english_parshiot[curr_parsha], 'a')
 			curr_parsha_file.write(str(vol_num+1)+":"+AddressTalmud.toStr("en", daf_count+2)+":1")  
 			curr_parsha += 1
@@ -94,6 +96,8 @@ for vol_num in range(3):
 				else:
 					curr_parsha_file.write('\n'+str(vol_num+1)+":"+AddressTalmud.toStr("en", daf_count+1)+":"+str(para_count-1))
 				curr_parsha_file.close()
+				if os.path.exists(english_parshiot[curr_parsha]) == True:
+					os.remove(english_parshiot[curr_parsha])		
 				curr_parsha_file = open(english_parshiot[curr_parsha], 'a')
 				curr_parsha += 1					
 			else:
@@ -126,13 +130,4 @@ text = {
 }
 post_text("New Zohar", text)
 
-		
-'''
-def inc_daf_count(curr_daf):
-	amud = curr_daf[-1] #always 'a' or 'b'
-	if amud=='b':
-		return str(int(curr_daf[0:-1])+1)+'a'
-	elif amud=='a':
-		return curr_daf[0:-1]+'b'
-'''
-
+	
