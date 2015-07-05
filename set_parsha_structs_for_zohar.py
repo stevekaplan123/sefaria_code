@@ -19,11 +19,11 @@ def processDaf(daf):
 	return daf_array[0]+":"+str(num)+daf_array[2]
 
 def post_index(index):
-	url = 'http://dev.sefaria.org/api/v2/raw/index/New_Zohar'
+	url = 'http://dev.sefaria.org/api/v2/raw/index/Zohar'
 	indexJSON = json.dumps(index)
 	values = {
 		'json': indexJSON, 
-		'apikey': 'F4J2j3RF6fHWHLtmAtOTeZHE3MOIcsgvcgtYSwMzHtM'
+		'apikey': 'YourApiKey'
 	}
 	data = urllib.urlencode(values)
 	req = urllib2.Request(url, data)
@@ -34,7 +34,7 @@ def post_index(index):
 		print 'Error code: ', e.code
 
 
-title = "New Zohar"
+title = "Zohar"
 genesis_parshiot = ["Bereshit", "Noach", "Lech Lecha", "Vayera", "Chayei Sara", "Toldot", "Vayetzei", "Vayishlach", "Vayeshev", "Miketz", "Vayigash", "Vayechi"]
 exodus_parshiot = ["Shemot", "Vaera", "Bo", "Beshalach", "Yitro", "Mishpatim", "Terumah", "Tetzaveh", "Ki Tisa", "Vayakhel", "Pekudei"]
 leviticus_parshiot = ["Vayikra", "Tzav", "Shmini", "Tazria", "Metzora", "Achrei Mot", "Kedoshim", "Emor", "Behar", "Bechukotai"]
@@ -46,8 +46,8 @@ structs = {}
 structs = { "nodes" : [] }
 
 intro_file = open("Introduction", 'r')
-intro_start = Ref("New Zohar "+intro_file.readline())
-intro_end = Ref("New Zohar "+intro_file.readline())
+intro_start = Ref("Zohar "+intro_file.readline())
+intro_end = Ref("Zohar "+intro_file.readline())
 intro_ref = intro_start.to(intro_end).normal()
 intro_file.close()
 structs["nodes"].append({
@@ -74,8 +74,8 @@ for parsha in english_parshiot:
 	if parsha == "Yitro":
 		break
 	f = open(parsha, 'r')
-	start = Ref("New Zohar "+f.readline())
-	end = Ref("New Zohar "+f.readline())
+	start = Ref("Zohar "+f.readline())
+	end = Ref("Zohar "+f.readline())
 	whole_ref = start.to(end).normal()
 		
 	structs["nodes"].append({
@@ -93,8 +93,8 @@ for parsha in english_parshiot:
 
 
 haman_file = open("Haman", 'r')
-haman_start = Ref("New Zohar "+haman_file.readline())
-haman_end = Ref("New Zohar "+haman_file.readline())
+haman_start = Ref("Zohar "+haman_file.readline())
+haman_end = Ref("Zohar "+haman_file.readline())
 haman_ref = haman_start.to(haman_end).normal()
 haman_file.close()
 structs["nodes"].append({
@@ -123,8 +123,8 @@ for parsha in english_parshiot:
 	if dont_go == True:
 		continue
 	f = open(parsha, 'r')
-	start = Ref("New Zohar "+f.readline())
-	end = Ref("New Zohar "+f.readline())
+	start = Ref("Zohar "+f.readline())
+	end = Ref("Zohar "+f.readline())
 	whole_ref = start.to(end).normal()
 		
 	structs["nodes"].append({
@@ -143,8 +143,8 @@ for parsha in english_parshiot:
 
 
 conc_file = open("Ha_Idra", 'r')
-conc_start = Ref("New Zohar "+conc_file.readline())
-conc_end = Ref("New Zohar "+conc_file.readline())
+conc_start = Ref("Zohar "+conc_file.readline())
+conc_end = Ref("Zohar "+conc_file.readline())
 conc_ref = conc_start.to(conc_end).normal()
 conc_file.close()
 structs["nodes"].append({
@@ -169,14 +169,14 @@ structs["nodes"].append({
 
 
 root = JaggedArrayNode()
-root.add_title("New Zohar", "en", primary=True)
-root.add_title(u"זהר הבא", "he", primary=True)
-#	root.add_title("Sefer Zohar", "en", primary=False)
-#	root.add_title("Sefer haZohar", "en", primary=False)
-#	root.add_title(u"ספר זוהר", "he", primary=False)
-#	root.add_title(u"ספר הזוהר", "he", primary=False)
+root.add_title("Zohar", "en", primary=True)
+root.add_title(u"זוהר", "he", primary=True)
+#root.add_title("Sefer Zohar", "en", primary=False)
+root.add_title("Sefer haZohar", "en", primary=False)
+root.add_title(u"ספר זוהר", "he", primary=False)
+root.add_title(u"ספר הזוהר", "he", primary=False)
 
-root.key = "new_zohar"
+root.key = "zohar"
 root.depth = 3
 #root.lengths = [3]
 root.sectionNames = ["Volume", "Daf", "Paragraph"]
@@ -185,8 +185,8 @@ root.addressTypes = ["Integer", "Talmud", "Integer"]
 root.validate()
 
 index = {
-	"title": "New Zohar",
-	"titleVariants": [""],#["Sefer Zohar", "Sefer haZohar"],
+	"title": "Zohar",
+	"titleVariants": ["Sefer Zohar", "Sefer haZohar"],
 	"sectionNames": ["Volume", "Daf", "Paragraph"],
 	"categories": ["Kabbalah"],
 	"addressTypes": ["Integer", "Talmud", "Integer"],
@@ -195,25 +195,5 @@ index = {
 }
 
 
-#Index(index).save()
 post_index(index)
-
-
-'''
-structsJSON = json.dumps(structs)
-zohar_i = get_index("New Zohar")
-zohar_i.set_alt_structure("Parasha", structsJSON)
-zohar_JSON = json.dumps(zohar_i.schema)
-post_index(zohar_JSON)
-
-
-
-zohar_i = get_index("New Zohar")
-#zohar_i = get_index_zohar()
-#pdb.set_trace()
-obj = deserialize_tree(structs, index=zohar_i, struct_class=TitledTreeNode)
-obj.title_group = zohar_i.nodes.title_group
-obj.validate()
-zohar_i.set_alt_structure("Parasha", obj)
-zohar_i.save()
-'''
+Index(index).save()
