@@ -48,17 +48,13 @@ root.validate()
 
 index = {
 	"title": "Tikkunei Zohar",
-	"titleVariants": [],
-	"sectionNames": ["Daf", "Paragraph"],
 	"categories": ["Kabbalah"],
-	"addressTypes": ["Talmud", "Integer"],
 	"default_struct": "Parasha",
 	"schema": root.serialize()
 }
 
 
 post_index(index)
-Index(index).save()
 
 
 

@@ -74,7 +74,6 @@ intro_node = ArrayMapNode()
 intro_node.add_title(u"הקדמת תקוני הזהר", "he", primary=True)
 intro_node.add_title("Introduction to Tikkunei HaZohar", "en", primary=True)
 intro_node.key = "intro"
-intro_node.includeSections = True
 intro_node.depth = 0
 intro_node.addressTypes = []
 intro_node.sectionNames = []
@@ -90,7 +89,6 @@ intro2_node = ArrayMapNode()
 intro2_node.add_title(u"הקדמה אחרת לתקוני הזהר", "he", primary=True)
 intro2_node.add_title("Second Introduction to Tikkunei HaZohar", "en", primary=True)
 intro2_node.key = "intro"
-intro2_node.includeSections = True
 intro2_node.depth = 0
 intro2_node.addressTypes = []
 intro2_node.sectionNames = []
@@ -128,6 +126,8 @@ start_tikkun_add = {}
 end_tikkun_add = {}
 refs = []
 
+refs.append("")  # There's a missing 1st tikkun
+
 max = len(add_tikkunim_heb)-1
 for count, word in enumerate(add_tikkunim_heb):
 	start_tikkun_add[count] = Ref("Tikkunei Zohar "+f.readline())
@@ -154,6 +154,7 @@ f.close()
 root = JaggedArrayNode()
 root.add_title("Tikkunei Zohar", "en", primary=True)
 root.add_title(u"תקוני הזהר", "he", primary=True)
+root.add_title("Tikkunei haZohar", "en")
 root.key = "tikkunei_zohar"
 root.depth = 2
 root.sectionNames = ["Daf", "Paragraph"]
@@ -163,10 +164,7 @@ root.validate()
 
 index = {
 	"title": "Tikkunei Zohar",
-	"titleVariants": ["Tikkunei haZohar"],
-	"sectionNames": ["Daf", "Paragraph"],
 	"categories": ["Kabbalah"],
-	"addressTypes": ["Talmud", "Integer"],
 	"alt_structs": {"Tikkunim": structs},
 	"default_struct": "Tikkunim",
 	"schema": root.serialize()
